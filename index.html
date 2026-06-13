@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AMLS — Advanced Medical Life Support</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: #0A0E14;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      max-width: 560px;
+      width: 90%;
+      padding: 2rem;
+      text-align: center;
+    }
+    .logo {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #E94560, #FF6B6B);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+    .status-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(8px);
+    }
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .status-row:last-child { border-bottom: none; }
+    .status-label { color: rgba(255,255,255,0.5); font-size: 0.85rem; }
+    .status-value { font-size: 0.85rem; font-weight: 500; }
+    .status-ok { color: #22C55E; }
+    .status-err { color: #EF4444; }
+    .status-warn { color: #F59E0B; }
+    .dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+    .dot.ok { background: #22C55E; box-shadow: 0 0 8px rgba(34,197,94,0.4); }
+    .dot.err { background: #EF4444; box-shadow: 0 0 8px rgba(239,68,68,0.4); }
+    .dot.warn { background: #F59E0B; box-shadow: 0 0 8px rgba(245,158,11,0.4); }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: #E94560;
+      color: white;
+      width: 100%;
+      justify-content: center;
+    }
+    .btn-primary:hover { background: #D63851; transform: translateY(-1px); }
+    .btn-primary:disabled {
+      background: rgba(233,69,96,0.3);
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-secondary {
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,255,255,0.08);
+      width: 100%;
+      justify-content: center;
+      margin-top: 0.75rem;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.08); }
+    .shortcut {
+      display: inline-block;
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.2);
+    }
+    .shortcut a {
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+    }
+    .shortcut a:hover { color: rgba(255,255,255,0.5); }
+    .url-display {
+      background: rgba(0,0,0,0.3);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: rgba(255,255,255,0.3);
+      word-break: break-all;
+      margin-top: 1rem;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .checking .dot { animation: pulse 1s ease-in-out infinite; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">🏥</div>
+    <h1>AMLS</h1>
+    <p class="subtitle">Advanced Medical Life Support</p>
+
+    <div class="status-card" id="statusCard">
+      <div class="status-row checking" id="rowProxy">
+        <span class="status-label">Proxy (localhost:3000)</span>
+        <span class="status-value" id="proxyStatus"><span class="dot warn"></span>Verificando...</span>
+      </div>
+      <div class="status-row checking" id="rowTunnel">
+        <span class="status-label">Tunnel (Cloudflare)</span>
+        <span class="status-value" id="tunnelStatus"><span class="dot warn"></span>Verificando...</span>
+      </div>
+      <div class="status-row checking" id="rowApi">
+        <span class="status-label">API (Hermes)</span>
+        <span class="status-value" id="apiStatus"><span class="dot warn"></span>Verificando...</span>
+      </div>
+    </div>
+
+    <a class="btn btn-primary" id="accessBtn" href="https://shore-economies-por-bird.trycloudflare.com" target="_blank" rel="noopener">
+      🏥 Acessar AMLS Chat
+    </a>
+    <a class="btn btn-secondary" id="localBtn" href="http://localhost:3000" target="_blank" rel="noopener">
+      💻 Acesso Local (se disponível)
+    </a>
+
+    <div class="url-display" id="tunnelUrl">🔗 https://shore-economies-por-bird.trycloudflare.com</div>
+
+    <p class="shortcut">
+      <span>📋 zip1.io/aml</span>
+      <span style="margin:0 0.5rem">·</span>
+      <span>Atualizado: 13/06/2026 17:13</span>
+      <span style="margin:0 0.5rem">·</span>
+      <a href="https://github.com/arissonnn/amls" target="_blank">GitHub</a>
+    </p>
+  </div>
+
+  <script>
+    // Tunnel URL from build-time placeholder
+    const TUNNEL_URL = 'https://shore-economies-por-bird.trycloudflare.com';
+    const isPlaceholder = TUNNEL_URL.startsWith('http://localhost');
+
+    const accessBtn = document.getElementById('accessBtn');
+    const proxyEl = document.getElementById('proxyStatus');
+    const tunnelEl = document.getElementById('tunnelStatus');
+    const apiEl = document.getElementById('apiStatus');
+
+    // Disable button if no real tunnel
+    if (isPlaceholder) {
+      accessBtn.setAttribute('disabled', 'disabled');
+      accessBtn.textContent = '⏳ Tunnel não configurado';
+    }
+
+    // Live status checks
+    const PROXY_CHECK = 'http://localhost:3000/api/ping';
+
+    async function checkStatus() {
+      // Check proxy
+      try {
+        const r = await fetch(PROXY_CHECK, { mode: 'cors', signal: AbortSignal.timeout(5000) });
+        const d = await r.json();
+        if (d.status === 'ok') {
+          proxyEl.innerHTML = '<span class="dot ok"></span>Online';
+          document.getElementById('rowProxy').className = 'status-row';
+        } else throw new Error('bad response');
+      } catch {
+        proxyEl.innerHTML = '<span class="dot err"></span>Offline';
+        document.getElementById('rowProxy').className = 'status-row';
+      }
+
+      // Check tunnel
+      if (!isPlaceholder) {
+        try {
+          const r = await fetch(TUNNEL_URL + '/api/ping', { mode: 'cors', signal: AbortSignal.timeout(8000) });
+          const d = await r.json();
+          if (d.status === 'ok') {
+            tunnelEl.innerHTML = '<span class="dot ok"></span>Online';
+            document.getElementById('rowTunnel').className = 'status-row';
+          } else throw new Error('bad response');
+        } catch {
+          tunnelEl.innerHTML = '<span class="dot err"></span>Offline (proxy pode estar offline)';
+          document.getElementById('rowTunnel').className = 'status-row';
+        }
+      } else {
+        tunnelEl.innerHTML = '<span class="dot warn"></span>Não configurado';
+        document.getElementById('rowTunnel').className = 'status-row';
+      }
+
+      // Check Hermes API directly
+      try {
+        const r = await fetch('http://127.0.0.1:8642/v1/models', { mode: 'cors', signal: AbortSignal.timeout(3000) });
+        if (r.ok || r.status === 401) {
+          apiEl.innerHTML = '<span class="dot ok"></span>Online';
+        } else throw new Error('not ok');
+      } catch {
+        apiEl.innerHTML = '<span class="dot err"></span>Offline';
+      }
+      document.getElementById('rowApi').className = 'status-row';
+    }
+
+    checkStatus();
+  </script>
+</body>
+</html>
