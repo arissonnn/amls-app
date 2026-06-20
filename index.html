@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta http-equiv="refresh" content="3; url=https://shore-economies-por-bird.trycloudflare.com">
+  <meta http-equiv="refresh" content="0; url=https://bulk-expensive-listing-monitor.trycloudflare.com">
   <title>AMLS — Advanced Medical Life Support</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -23,10 +23,7 @@
       padding: 2rem;
       text-align: center;
     }
-    .logo {
-      font-size: 3rem;
-      margin-bottom: 0.5rem;
-    }
+    .logo { font-size: 3rem; margin-bottom: 0.5rem; }
     h1 {
       font-size: 2rem;
       font-weight: 700;
@@ -43,13 +40,27 @@
       text-transform: uppercase;
       margin-bottom: 2rem;
     }
+    #redirecting {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid rgba(233,69,96,0.2);
+      border-top-color: #E94560;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #fallback { display: none; width: 100%; }
     .status-card {
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: 16px;
       padding: 1.5rem;
       margin-bottom: 1.5rem;
-      backdrop-filter: blur(8px);
     }
     .status-row {
       display: flex;
@@ -93,31 +104,6 @@
       justify-content: center;
     }
     .btn-primary:hover { background: #D63851; transform: translateY(-1px); }
-    .btn-primary:disabled {
-      background: rgba(233,69,96,0.3);
-      cursor: not-allowed;
-      transform: none;
-    }
-    .btn-secondary {
-      background: rgba(255,255,255,0.05);
-      color: rgba(255,255,255,0.7);
-      border: 1px solid rgba(255,255,255,0.08);
-      width: 100%;
-      justify-content: center;
-      margin-top: 0.75rem;
-    }
-    .btn-secondary:hover { background: rgba(255,255,255,0.08); }
-    .shortcut {
-      display: inline-block;
-      margin-top: 1.5rem;
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.2);
-    }
-    .shortcut a {
-      color: rgba(255,255,255,0.3);
-      text-decoration: none;
-    }
-    .shortcut a:hover { color: rgba(255,255,255,0.5); }
     .url-display {
       background: rgba(0,0,0,0.3);
       border-radius: 8px;
@@ -133,6 +119,7 @@
       50% { opacity: 0.4; }
     }
     .checking .dot { animation: pulse 1s ease-in-out infinite; }
+    .redirect-msg { color: rgba(255,255,255,0.4); font-size: 0.9rem; }
   </style>
 </head>
 <body>
@@ -141,103 +128,80 @@
     <h1>AMLS</h1>
     <p class="subtitle">Advanced Medical Life Support</p>
 
-    <div class="status-card" id="statusCard">
-      <div class="status-row checking" id="rowProxy">
-        <span class="status-label">Proxy (localhost:3000)</span>
-        <span class="status-value" id="proxyStatus"><span class="dot warn"></span>Verificando...</span>
-      </div>
-      <div class="status-row checking" id="rowTunnel">
-        <span class="status-label">Tunnel (Cloudflare)</span>
-        <span class="status-value" id="tunnelStatus"><span class="dot warn"></span>Verificando...</span>
-      </div>
-      <div class="status-row checking" id="rowApi">
-        <span class="status-label">API (Hermes)</span>
-        <span class="status-value" id="apiStatus"><span class="dot warn"></span>Verificando...</span>
-      </div>
+    <div id="redirecting">
+      <div class="spinner"></div>
+      <p class="redirect-msg">Redirecionando para o chat...</p>
     </div>
 
-    <a class="btn btn-primary" id="accessBtn" href="https://shore-economies-por-bird.trycloudflare.com" target="_blank" rel="noopener">
-      🏥 Acessar AMLS Chat
-    </a>
-    <a class="btn btn-secondary" id="localBtn" href="http://localhost:3000" target="_blank" rel="noopener">
-      💻 Acesso Local (se disponível)
-    </a>
-
-    <div class="url-display" id="tunnelUrl">🔗 https://shore-economies-por-bird.trycloudflare.com</div>
-
-    <p class="shortcut">
-      <span>📋 zip1.io/amlss</span>
-      <span style="margin:0 0.5rem">·</span>
-      <span>Atualizado: 13/06/2026 17:13</span>
-      <span style="margin:0 0.5rem">·</span>
-      <a href="https://github.com/arissonnn/amls" target="_blank">GitHub</a>
-    </p>
+    <div id="fallback">
+      <div class="status-card" id="statusCard">
+        <div class="status-row checking" id="rowProxy">
+          <span class="status-label">Proxy</span>
+          <span class="status-value" id="proxyStatus"><span class="dot warn"></span>Verificando...</span>
+        </div>
+        <div class="status-row checking" id="rowTunnel">
+          <span class="status-label">Tunnel</span>
+          <span class="status-value" id="tunnelStatus"><span class="dot warn"></span>Verificando...</span>
+        </div>
+        <div class="status-row checking" id="rowApi">
+          <span class="status-label">API Hermes</span>
+          <span class="status-value" id="apiStatus"><span class="dot warn"></span>Verificando...</span>
+        </div>
+      </div>
+      <a class="btn btn-primary" id="accessBtn" href="https://bulk-expensive-listing-monitor.trycloudflare.com" target="_blank" rel="noopener">
+        🏥 Acessar AMLS Chat
+      </a>
+      <div class="url-display" id="tunnelUrl">🔗 https://bulk-expensive-listing-monitor.trycloudflare.com</div>
+    </div>
   </div>
 
   <script>
-    // Tunnel URL from build-time placeholder
-    const TUNNEL_URL = 'https://shore-economies-por-bird.trycloudflare.com';
-    const isPlaceholder = TUNNEL_URL.startsWith('http://localhost');
+    const TUNNEL_URL = 'https://bulk-expensive-listing-monitor.trycloudflare.com';
 
-    const accessBtn = document.getElementById('accessBtn');
-    const proxyEl = document.getElementById('proxyStatus');
-    const tunnelEl = document.getElementById('tunnelStatus');
-    const apiEl = document.getElementById('apiStatus');
-
-    // Disable button if no real tunnel
-    if (isPlaceholder) {
-      accessBtn.setAttribute('disabled', 'disabled');
-      accessBtn.textContent = '⏳ Tunnel não configurado';
+    if (window.top === window.self) {
+      fetch(TUNNEL_URL + '/api/ping', {
+        mode: 'cors', signal: AbortSignal.timeout(5000)
+      })
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(() => { window.location.replace(TUNNEL_URL); })
+        .catch(() => {
+          document.getElementById('redirecting').style.display = 'none';
+          document.getElementById('fallback').style.display = 'block';
+          checkStatus();
+        });
     }
 
-    // Live status checks
-    const PROXY_CHECK = 'http://localhost:3000/api/ping';
+    setTimeout(() => {
+      const r = document.getElementById('redirecting');
+      const f = document.getElementById('fallback');
+      if (r && r.style.display !== 'none') {
+        r.style.display = 'none';
+        f.style.display = 'block';
+        checkStatus();
+      }
+    }, 6000);
 
     async function checkStatus() {
-      // Check proxy
       try {
-        const r = await fetch(PROXY_CHECK, { mode: 'cors', signal: AbortSignal.timeout(5000) });
+        const r = await fetch('http://localhost:3000/api/ping', { mode: 'cors', signal: AbortSignal.timeout(5000) });
         const d = await r.json();
-        if (d.status === 'ok') {
-          proxyEl.innerHTML = '<span class="dot ok"></span>Online';
-          document.getElementById('rowProxy').className = 'status-row';
-        } else throw new Error('bad response');
-      } catch {
-        proxyEl.innerHTML = '<span class="dot err"></span>Offline';
-        document.getElementById('rowProxy').className = 'status-row';
-      }
+        if (d.status === 'ok') { proxyStatus.innerHTML = '<span class="dot ok"></span>Online'; rowProxy.className = 'status-row'; }
+        else throw new Error();
+      } catch { proxyStatus.innerHTML = '<span class="dot err"></span>Offline'; rowProxy.className = 'status-row'; }
 
-      // Check tunnel
-      if (!isPlaceholder) {
-        try {
-          const r = await fetch(TUNNEL_URL + '/api/ping', { mode: 'cors', signal: AbortSignal.timeout(8000) });
-          const d = await r.json();
-          if (d.status === 'ok') {
-            tunnelEl.innerHTML = '<span class="dot ok"></span>Online';
-            document.getElementById('rowTunnel').className = 'status-row';
-          } else throw new Error('bad response');
-        } catch {
-          tunnelEl.innerHTML = '<span class="dot err"></span>Offline (proxy pode estar offline)';
-          document.getElementById('rowTunnel').className = 'status-row';
-        }
-      } else {
-        tunnelEl.innerHTML = '<span class="dot warn"></span>Não configurado';
-        document.getElementById('rowTunnel').className = 'status-row';
-      }
+      try {
+        const r = await fetch(TUNNEL_URL + '/api/ping', { mode: 'cors', signal: AbortSignal.timeout(8000) });
+        const d = await r.json();
+        if (d.status === 'ok') { tunnelStatus.innerHTML = '<span class="dot ok"></span>Online'; rowTunnel.className = 'status-row'; }
+        else throw new Error();
+      } catch { tunnelStatus.innerHTML = '<span class="dot err"></span>Offline'; rowTunnel.className = 'status-row'; }
 
-      // Check Hermes API directly
       try {
         const r = await fetch('http://127.0.0.1:8642/v1/models', { mode: 'cors', signal: AbortSignal.timeout(3000) });
-        if (r.ok || r.status === 401) {
-          apiEl.innerHTML = '<span class="dot ok"></span>Online';
-        } else throw new Error('not ok');
-      } catch {
-        apiEl.innerHTML = '<span class="dot err"></span>Offline';
-      }
-      document.getElementById('rowApi').className = 'status-row';
+        if (r.ok || r.status === 401) { apiStatus.innerHTML = '<span class="dot ok"></span>Online'; }
+        else throw new Error();
+      } catch { apiStatus.innerHTML = '<span class="dot err"></span>Offline'; }
     }
-
-    checkStatus();
   </script>
 </body>
 </html>
